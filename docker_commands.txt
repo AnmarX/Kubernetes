@@ -17,3 +17,7 @@ docker start/stop/restart/rm
 
 #remove images
 docker rmi
+
+
+#to see the image metadata in json format
+docker inspect <imagename:tag> 
