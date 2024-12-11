@@ -1,4 +1,4 @@
-# this example for mounting volumes (fully managed by docker)
+# this example for docker volumes (fully managed by docker)
 # you will see the data on /var/lib/docker/volumes/<volume name>
 
 version: '3.8'
