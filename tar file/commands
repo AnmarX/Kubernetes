@@ -1,0 +1,15 @@
+# convert a dict to a tar 
+# c: Create a new archive.
+# z: Filters the archive through gzip (handles .gz compression).
+# v: Verbose mode (shows the files being extracted).
+# f: Specifies the file name (<file>.tar.gz).
+tar czvf <giveItName>.tar.gz *
+
+
+
+# x: Extracts the archive.
+# z: Filters the archive through gzip (handles .gz compression).
+# v: Verbose mode (shows the files being extracted).
+# f: Specifies the file name (<file>.tar.gz).
+#unarchive 
+tar xzvf <file>.tar.gz
