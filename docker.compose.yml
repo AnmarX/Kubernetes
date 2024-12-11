@@ -1,0 +1,38 @@
+# this example for mounting volumes (fully managed by docker)
+# you will see the data on /var/lib/docker/volumes/<volume name>
+
+version: '3.8'
+
+services:
+  database:
+    image: mysql:latest
+    container_name: my_database
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/mysql  # Mount Docker volume to MySQL data directory
+    ports:
+      - "3306:3306"
+
+volumes:
+  db_data:  # Define a named Docker volume
+
+
+# this example for mounting volumes (not fully managed by docker) specifying where the dict of the volume manully
+# version: '3.8'
+# services:
+  database:
+    image: mysql:latest
+    container_name: my_database
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./mysql_data:/var/lib/mysql  # Host directory is mapped to MySQL data directory
+    ports:
+      - "3306:3306"
