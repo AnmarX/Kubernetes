@@ -10,14 +10,14 @@ docker ps
 #list all the containers
 docker ps -a
 
-#execute commands on containers
-docker exec
+#execute commands on containers/access container shell
+docker exec -it <container name> /bin/bash
 
 docker start/stop/restart/rm
 
 #remove images
 docker rmi
 
-
+ 
 #to see the image metadata in json format
 docker inspect <imagename:tag> 
