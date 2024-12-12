@@ -21,3 +21,6 @@ docker rmi
  
 #to see the image metadata in json format
 docker inspect <imagename:tag> 
+
+#Add in docker file will unarhive a file if its moved
+# copy will take the fill the dump it as it is
