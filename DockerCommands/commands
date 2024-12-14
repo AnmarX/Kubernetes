@@ -2,7 +2,7 @@
 docker images
 
 #create new container
-# docker run 
+docker run 
 
 #list runinng containers
 docker ps
@@ -32,6 +32,7 @@ docker image prune -f
 
 
 # The -a option removes all unused images, including both dangling and untagged images
+#Add the -f flag to bypass the confirmation prompt
 docker image prune -a -f
 
 
@@ -45,6 +46,9 @@ docker system prune -a
 #Add the --volumes flag to include unused volumes:
 docker system prune -a --volumes
 
+#To remove all dangling volumes:
+#Add the -f flag to bypass the confirmation prompt
+docker volume prune -f
 
 
 
