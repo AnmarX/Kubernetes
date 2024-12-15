@@ -55,7 +55,8 @@ docker volume prune -f
 #From ubuntu:latest
 #ENTRYPOINT ["echo"]
 # to build this new image with this above command i will use 
-docker build -t <give-image-name>:<give-tag>
+# the . is the current dict that have the dockerfile
+docker build -t <give-image-name>:<give-tag> .
 docker run <give-image-name>:<give-tag>
 
 #expose in docker file is just enableing the port NOT bining the port with the host machine
