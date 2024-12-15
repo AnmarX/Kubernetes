@@ -50,6 +50,16 @@ docker system prune -a --volumes
 #Add the -f flag to bypass the confirmation prompt
 docker volume prune -f
 
+# i have ubutu image and i want to create a new image
+# with dockerFile
+#From ubuntu:latest
+#ENTRYPOINT ["echo"]
+# to build this new image with this above command i will use 
+docker build -t <give-image-name>:<give-tag>
+docker run <give-image-name>:<give-tag>
+
+#expose in docker file is just enableing the port NOT bining the port with the host machine
+
 
 
 
