@@ -63,6 +63,19 @@ docker run <give-image-name>:<give-tag>
 
 
 
+# The volumes directive maps the current directory (.) on your host to /code inside the container.
+# Changes in the local directory will automatically reflect inside the container.
+services:
+  web:
+    build: .
+    ports:
+      - "8000:5000"
+    volumes:
+      - .:/code
+    redis:
+      image: "redis:alpine"
+
+
 
 
 

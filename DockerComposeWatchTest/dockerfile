@@ -1,0 +1,40 @@
+
+# both will work the same, but the problem if you dont want to specify the host you need to map it to port 80
+# why ?
+# because mapping to port 80 will accept all hosts from outside and inside of the containers
+# if you dont want to use port 80 insaide of the container you should explixit the host in the below example --host 0.0.0.0
+
+FROM python:3.11.4-bullseye
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+
+EXPOSE 8000
+
+# need to specify the --host to accept all network interface because not using port 80 inside of the container
+CMD ["fastapi","dev","main.py","--host","0.0.0.0","--port", "8000"]
+
+
+
+
+
+# FROM python:3.9
+
+
+# WORKDIR /code
+
+
+# COPY ./requirements.txt /code/requirements.txt
+
+
+# RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+
+
+# COPY ./app /code/app
+
+# no need to write host becuase port 80 will accept all network interface 
+# CMD ["fastapi", "run", "app/main.py", "--port", "80"]
