@@ -6,17 +6,22 @@
 
 FROM python:3.11.4-bullseye
 
-WORKDIR /app
-
-COPY . .
+COPY requirements.txt requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
 
+WORKDIR /app
+
+# no need for the because i already mounted the src dict to the container
+# COPY . .
+
+
+# this just metadata its not opening any ports
 EXPOSE 8000
 
 # need to specify the --host to accept all network interface because not using port 80 inside of the container
-CMD ["fastapi","dev","main.py","--host","0.0.0.0","--port", "8000"]
+CMD ["uvicorn","main:app","--host","0.0.0.0","--port", "8000","--reload"]
 
 
 
