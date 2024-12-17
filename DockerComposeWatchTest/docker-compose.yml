@@ -1,17 +1,19 @@
 services:
   testwatch:
     container_name: Test_Docker_Watch
-    volumes:
-      - "../DockerComposeWatchTest:/app"
+    # this volume is same as the develo watch
+    # volumes:
+    #   - "../DockerComposeWatchTest:/app"
     build: .
-    # next i want to try the develop and watch
-    # develop:
-    #   watch:
-    #     - action: sync
-    #       path: ./Kubernetes/DockerComposeWatchTest
-    #       target: /app
+    develop:
+      watch:
+        - action: sync
+          path: ../DockerComposeWatchTest
+          target: /app
           # ignore:
           #   - node_modules/
+        # - action: rebuild
+        #   path: package.json
     ports:
       - 8000:8000
     # command: ["uvicorn","main:app","--host","0.0.0.0","--port", "8000","--reload"]

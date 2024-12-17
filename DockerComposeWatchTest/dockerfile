@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 
 # no need for the because i already mounted the src dict to the container
-# COPY . .
+COPY . .
 
 
 # this just metadata its not opening any ports
