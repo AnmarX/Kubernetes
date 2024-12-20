@@ -21,6 +21,7 @@ COPY . .
 EXPOSE 8000
 
 # need to specify the --host to accept all network interface because not using port 80 inside of the container
+#useing  - action: sync+restart is same as --reload but the reload is faster for this built i uvicorn server
 CMD ["uvicorn","main:app","--host","0.0.0.0","--port", "8000","--reload"]
 
 

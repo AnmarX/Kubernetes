@@ -1,12 +1,13 @@
 services:
   testwatch:
     container_name: Test_Docker_Watch
-    # this volume is same as the develo watch
+    # this volume is same as the develo watch, but using watch is better
     # volumes:
     #   - "../DockerComposeWatchTest:/app"
     build: .
     develop:
       watch:
+      # can you use this  - action: sync+restart but it will restart the service every time just use --reload on the dockerfile
         - action: sync
           path: ../DockerComposeWatchTest
           target: /app
@@ -14,7 +15,23 @@ services:
           #   - node_modules/
         # - action: rebuild
         #   path: package.json
-    ports:
-      - 8000:8000
+
+    #the below is only metadata
+    expose:
+      - 8000
+
+    # no need to map the ports because i want the app to be only accessd through nginx
+    # ports:
+    #   - 8000:8000
+    
+    # no need to use the command below here i used it on the dockerfile
     # command: ["uvicorn","main:app","--host","0.0.0.0","--port", "8000","--reload"]
+
+  nginxserver:
+    image: nginx:latest
+    container_name: ngnixserver
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
 
