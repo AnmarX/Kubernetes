@@ -34,4 +34,24 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
       - 80:80
+  
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123123123
+      - POSTGRES_DB=postgres
+    # ports:
+    #   - "5432:5432"
+    # restart: unless-stopped
+    # volumes:
+    #   - ./CREATE_ALL_TABLE.sql:/docker-entrypoint-initdb.d/init.sql
+    #   - ./pg_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 120s
+      timeout: 5s
+      retries: 5
 
