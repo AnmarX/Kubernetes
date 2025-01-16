@@ -3,7 +3,8 @@ kind: Ingress
 metadata:
   name: example-app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: "/"
+  # this will remove the prefix for example: /second-app/one it will be /one
+    # nginx.ingress.kubernetes.io/rewrite-target: "/"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
 spec:
