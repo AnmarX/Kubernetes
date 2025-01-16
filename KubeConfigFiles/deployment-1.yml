@@ -1,0 +1,69 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-app
+  labels:
+    app: example-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-app
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - name: example-container
+
+        image: your-app-image  # Replace with your application image
+
+        ports:
+        - containerPort: 8000
+
+        # Purpose: Determines if the application is ready to handle incoming traffic.
+        # Behavior:
+        # Kubernetes checks the specified probe (e.g., an HTTP endpoint).
+        # If the check passes, the pod is marked as "ready," and traffic is routed to it.
+        # If it fails, the pod stays out of the load balancer's pool of endpoints.
+        # Use Case:
+        # Prevent routing traffic to a pod that isn’t fully initialized (e.g., app dependencies aren't loaded).
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        
+
+        # Purpose: Monitors the health of the application to detect if it's still running properly.
+        # Behavior:
+        # Kubernetes periodically checks the probe.
+        # If the check fails, the pod is considered unhealthy and restarted.
+        # Use Case:
+        # Automatically recover from issues like deadlocks or hangs in the application.
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+
+        resources:  # Resource requests and limits for the container.
+          requests:
+            memory: "64Mi"  # Minimum memory requested for the container.
+            cpu: "100m"  # Minimum CPU requested for the container.
+          limits:
+            memory: "128Mi"  # Maximum memory the container can use.
+            cpu: "200m"  # Maximum CPU the container can use.
+            
+        volumeMounts:
+        - name: app-code
+          mountPath: /app  # Path inside the container where the code will be mounted
+
+      volumes:
+      - name: app-code
+        hostPath:
+          path: /path/to/your/code  # Replace with the actual path to your code
+          type: Directory
