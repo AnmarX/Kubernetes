@@ -1,0 +1,73 @@
+### **Corrected Workflow:**
+
+1. **User Sends HTTP Request:**
+
+   - The user sends an HTTP request to the application (e.g., `http://example-app.local/`).
+
+2. **Ingress Handles the Request:**
+
+   - The Ingress (managed by the NGINX Ingress Controller) is **listening on port 80** (for HTTP traffic) **outside the cluster**.
+   - It inspects the request's `host` (e.g., `example-app.local`) and `path` (e.g., `/`) to determine which backend Service should handle the request.
+
+3. **Ingress Forwards to Service:**
+
+   - The Ingress forwards the request to the specified Service. In this case:
+     - The **example-app-service** is listening on **port 80** **inside the cluster**.
+
+4. **Service Matches Pods Using Labels:**
+
+   - The Service uses its `selector` (e.g., `app: example-app`) to identify all pods that should receive traffic.
+   - This ensures the Service knows which pods belong to the application.
+
+5. **Service Forwards to Pod:**
+
+   - The Service balances incoming requests across all the pods that match its `selector`.
+   - It forwards traffic to the **`targetPort` (e.g., 8000)**, which corresponds to the port exposed by the container inside the pod where the application is running.
+
+6. **Pod Processes the Request:**
+   - The application running in the container (inside the pod) processes the request on **port 8000** and sends the response back through the Service and Ingress to the user.
+
+---
+
+### **Organized Workflow Steps:**
+
+1. **External Traffic Enters the Cluster:**
+
+   - The user sends an HTTP request (e.g., `http://example-app.local/`) to the NGINX Ingress Controller listening on port **80**.
+
+2. **Ingress Routes the Traffic:**
+
+   - The Ingress checks its rules for the `host` and `path` and forwards the request to the specified **Service** (e.g., `example-app-service`) on port **80**.
+
+3. **Service Matches and Balances Traffic:**
+
+   - The Service identifies the pods it should forward traffic to using its `selector` (e.g., `app: example-app`).
+   - The Service listens on port **80** and forwards the traffic to the pod's **targetPort** (e.g., 8000).
+
+4. **Traffic Reaches the Pod:**
+
+   - The traffic arrives at one of the selected pods.
+   - Inside the pod, the container running the application listens on port **8000** and processes the request.
+
+5. **Response Sent Back to the User:**
+   - The processed response travels back through the Service, the Ingress, and finally reaches the user.
+
+---
+
+### **Key Clarifications:**
+
+- **Ingress Port (80):**
+
+  - The Ingress listens on port **80** **outside the cluster** to handle external traffic.
+
+- **Service Port (80):**
+
+  - The Service listens on port **80** **inside the cluster** to handle traffic from the Ingress.
+
+- **Target Port (8000):**
+
+  - The Service forwards traffic to the `targetPort` on the container, which is the actual port where the application is running inside the pod.
+
+- **Pods and Labels:**
+  - The Service uses the `selector` to find the pods matching its labels.
+  - Traffic is balanced across these pods.

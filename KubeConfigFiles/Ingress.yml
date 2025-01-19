@@ -17,6 +17,7 @@ spec:
         backend:
           service:
             name: example-app-service
+            # listen on port from externall traffic
             port:
               number: 80
       - path: /second-app
@@ -24,6 +25,7 @@ spec:
         backend:
           service:
             name: second-app-service
+            # listen on port from externall traffic
             port:
               number: 80
   ingressClassName: nginx
