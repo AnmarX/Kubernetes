@@ -1,0 +1,90 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapplication
+  labels:
+    app: webapp
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: webapp
+
+  template:
+    metadata:
+      labels:
+        app: webapp
+
+    spec:
+      containers:
+      - name: appContainer
+
+        image: your-app-image  # Replace with your application image
+
+        ports:
+        - containerPort: 8000
+        command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+        volumeMounts:
+        - name: app-code
+          mountPath: /app  # Path inside the container where the code will be mounted
+
+
+        resources:  # Resource requests and limits for the container.
+          requests:
+            memory: "64Mi"  # Minimum memory requested for the container.
+            cpu: "100m"  # Minimum CPU requested for the container.
+          limits:
+            memory: "128Mi"  # Maximum memory the container can use.
+            cpu: "200m"  # Maximum CPU the container can use.
+      
+
+      
+      - name: dbCotainer
+
+        image: postgres:latest  # Replace with your application image
+
+        ports:
+        - containerPort: 5432
+
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_DB
+
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-data
+
+        resources:  # Resource requests and limits for the container.
+          requests:
+            memory: "64Mi"  # Minimum memory requested for the container.
+            cpu: "100m"  # Minimum CPU requested for the container.
+          limits:
+            memory: "128Mi"  # Maximum memory the container can use.
+            cpu: "200m"  # Maximum CPU the container can use.
+            
+        
+
+      volumes:
+      - name: app-code
+        hostPath:
+          path: /path/to/your/code  # Replace with the actual path to your code
+          type: Directory
+      - name: postgres-data
+        emptyDir: {}

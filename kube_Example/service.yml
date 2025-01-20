@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+
+
+# How the Flow Works:
+#     Client → Service:
+#       The client (another Pod or external client) sends a request to the Service's IP or DNS name on the port (e.g., 5432).
+
+#     For example:
+#       From another Pod: postgres-service:5432.
+#       From external: <NodeIP>:<NodePort> or <LoadBalancerIP>:5432 (depending on Service type).
+
+#     Service → Pod:
+#       The Service receives the request on port: 5432 and routes it to the correct backend Pod.
+
+#     Pod → Container:
+#       The Service forwards the traffic to the container inside the Pod, on the targetPort (e.g., 5432).

@@ -10,5 +10,6 @@ spec:
   ports:
   - protocol: TCP
     port: 80 # Service listens here
+    # TargetPort: This is the actual port on which your application is running inside the container.
     targetPort: 8000
   type: ClusterIP
