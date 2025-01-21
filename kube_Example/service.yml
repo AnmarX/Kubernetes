@@ -8,6 +8,7 @@ spec:
     app: postgres
   ports:
   - protocol: TCP
+    # the service ip is listing to port 5432, so if i sent http://localhost:5432 this port will accept it and forward it to the target port of the container
     port: 5432
     targetPort: 5432
 
