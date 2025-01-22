@@ -4,6 +4,7 @@ metadata:
   name: webapplication
   labels:
     app: webapp
+    
 spec:
   replicas: 2
 
@@ -23,8 +24,8 @@ spec:
         image: your-app-image  # Replace with your application image
 
         ports:
-        - containerPort: 8000
-        command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+        - containerPort: 8080
+        command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
 
         volumeMounts:
         - name: app-code

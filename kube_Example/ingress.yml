@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-app-ingress
+  annotations:
+    # this will remove the prefix for example: /second-app/one it will be /one
+    # nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+spec:
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app-service
+            # ingress controller nginx is listing to port 80 and 443 by default
+            port:
+            # Explicitly specify which Service port to forward to
+              number: 8080
+      # - path: /second-app
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: second-app-service
+      #       # ingress controller nginx is listing to port 80 and 443 by default
+      #       port:
+      #       # Explicitly specify which Service port to forward to
+      #         number: 80
+  ingressClassName: nginx
