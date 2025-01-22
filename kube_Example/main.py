@@ -10,7 +10,7 @@ conn = psycopg.connect(
     dbname="postgres",
     user="postgres",
     password="123123123",
-    host="",
+    host="db-kube-test",
     port="5432"
 )
 cursor = conn.cursor()
