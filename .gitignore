@@ -1,3 +1,4 @@
 /DockerComposeWatchTest/__pycache__
 /DockerComposeWatchTest/.venv
 .venv
+kube_Example/pg_data

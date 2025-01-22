@@ -5,13 +5,28 @@ import psycopg
 # FastAPI app
 app = FastAPI()
 
-# PostgreSQL Connection
+# DATABASE_CONFIG = {
+#     "dbname": "postgres",
+#     "user": "postgres",
+#     "password": "123123123",
+#     "host": "db",
+#     "port": 5432,
+# }
+
+# # Database connection helper function
+# def get_db():
+#     conn = psycopg.connect(**DATABASE_CONFIG)
+#     try:
+#         yield conn
+#     finally:
+#         conn.close()
+
 conn = psycopg.connect(
     dbname="postgres",
     user="postgres",
-    password="123123123",
-    host="db-kube-test",
-    port="5432"
+    password=123123123,
+    host="db",
+    port=5432
 )
 cursor = conn.cursor()
 

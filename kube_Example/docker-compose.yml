@@ -1,5 +1,5 @@
 services:
-  test-watch-kube-test:
+  kube-test-app:
     container_name: app-web-kube
     # this volume is same as the develo watch, but using watch is better
     # volumes:
@@ -24,7 +24,7 @@ services:
       - 80:80
   
 
-  db-kube-test:
+  db:
     image: postgres:latest
     container_name: postgres-db-kube
     environment:
@@ -32,11 +32,11 @@ services:
       - POSTGRES_PASSWORD=123123123
       - POSTGRES_DB=postgres
     # ports:
-    #   - "5432:5432"
-    # restart: unless-stopped
-    # volumes:
-    #   - ./CREATE_ALL_TABLE.sql:/docker-entrypoint-initdb.d/init.sql
-    #   - ./pg_data:/var/lib/postgresql/data/
+    #   - "5433:5432"
+    restart: unless-stopped
+    volumes:
+      - ./table.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./pg_data:/var/lib/postgresql/data/
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 120s
