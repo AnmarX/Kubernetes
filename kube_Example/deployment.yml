@@ -85,7 +85,7 @@ spec:
       volumes:
       - name: app-code
         hostPath:
-          path: /path/to/your/code  # Replace with the actual path to your code
+          path: ./Kubernetes/kube_Example  # Replace with the actual path to your code
           type: Directory
       - name: postgres-data
         emptyDir: {}
