@@ -1,0 +1,9 @@
+docker login
+
+docker build -t <image-name>:<tag> .
+
+
+docker tag <image-name>:<tag> <docker-hub-username>/<repository-name>:<tag>
+
+
+docker push <docker-hub-username>/<repository-name>:<tag>
