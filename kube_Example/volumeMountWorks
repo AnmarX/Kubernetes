@@ -1,0 +1,44 @@
+Yes, your understanding is **almost correct**! Here’s the exact process:
+
+---
+
+### **How Kubernetes Handles `emptyDir` Volumes**
+
+When you define:
+
+```yaml
+volumes:
+  - name: postgres-data
+    emptyDir: {}
+```
+
+and mount it in the **PostgreSQL container** like this:
+
+```yaml
+volumeMounts:
+  - mountPath: /var/lib/postgresql/data
+    name: postgres-data
+```
+
+Kubernetes will follow this **step-by-step process**:
+
+1. **Create a folder for `emptyDir` on the node**
+
+   - Kubernetes **creates a temporary directory on the worker node** that runs the pod.
+   - The directory is typically created under:
+     ```
+     /var/lib/kubelet/pods/<pod-id>/volumes/kubernetes.io~empty-dir/postgres-data
+     ```
+   - This directory exists **only while the pod is running**.
+
+2. **Mount the directory inside the container**
+
+   - Kubernetes **binds the node’s directory (`emptyDir`) to the container’s mount path** (`/var/lib/postgresql/data`).
+   - This means that **inside the container, `/var/lib/postgresql/data` actually points to the `emptyDir` folder on the node**.
+
+3. **PostgreSQL writes data to `/var/lib/postgresql/data` in the container**
+
+   - Since this path is mounted to `emptyDir`, the database files are actually stored **in the node’s `emptyDir` volume**, not inside the container filesystem.
+
+4. **When the Pod is Deleted**
+   - The **`emptyDir` folder on the node is also deleted**, and **all database data is lost**.

@@ -5,27 +5,21 @@ import psycopg
 # FastAPI app
 app = FastAPI()
 
-# DATABASE_CONFIG = {
-#     "dbname": "postgres",
-#     "user": "postgres",
-#     "password": "123123123",
-#     "host": "db",
-#     "port": 5432,
-# }
+# for docker compose
+# conn = psycopg.connect(
+#     dbname="postgres",
+#     user="postgres",
+#     password=123123123,
+#     host="db",
+#     port=5432
+# )
 
-# # Database connection helper function
-# def get_db():
-#     conn = psycopg.connect(**DATABASE_CONFIG)
-#     try:
-#         yield conn
-#     finally:
-#         conn.close()
-
+#for kubenestes
 conn = psycopg.connect(
     dbname="postgres",
     user="postgres",
     password=123123123,
-    host="db",
+    host="postgres-service",
     port=5432
 )
 cursor = conn.cursor()

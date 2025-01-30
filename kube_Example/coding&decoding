@@ -1,0 +1,5 @@
+#code bas64
+echo -n <word> | base64
+
+#decode
+echo "<decoded-word>" | base64 --decode && echo
