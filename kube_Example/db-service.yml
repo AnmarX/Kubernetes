@@ -5,7 +5,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: webapp
+    app: db
   ports:
   - protocol: TCP
     # the service ip is listing to port 5432, so if i sent http://localhost:5432 this port will

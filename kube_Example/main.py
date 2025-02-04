@@ -1,6 +1,19 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import psycopg
+import os
+
+
+db_name = os.getenv("POSTGRES_DB")
+db_user = os.getenv("POSTGRES_USER")
+db_password = os.getenv("POSTGRES_PASSWORD")
+db_host = os.getenv("POSTGRES_HOST", "db")
+
+# Print values (for testing purposes)
+print(f"DB Name: {db_name}")
+print(f"DB User: {db_user}")
+print(f"DB Host: {db_host}")
+
 
 # FastAPI app
 app = FastAPI()
@@ -16,10 +29,10 @@ app = FastAPI()
 
 #for kubenestes
 conn = psycopg.connect(
-    dbname="postgres",
-    user="postgres",
-    password=123123123,
-    host="postgres-service",
+    dbname=db_name,
+    user=db_user,
+    password=db_password,
+    host=db_host,
     port=5432
 )
 cursor = conn.cursor()
@@ -29,6 +42,13 @@ class Item(BaseModel):
     name: str
     description: str | None = None
     price: float
+
+
+
+@app.get("/")
+def read_root():
+    pod_name = os.getenv("POD_NAME", "Unknown Pod")
+    return {"message": f"Hello from pod: {pod_name}"}
 
 @app.post("/items/")
 async def create_item(item: Item):

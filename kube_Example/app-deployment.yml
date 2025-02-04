@@ -1,0 +1,100 @@
+apiVersion:  apps/v1
+kind: Deployment
+metadata:
+  name: webapplication
+  labels:
+    app: webapp
+    
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: webapp
+
+  template:
+    metadata:
+      labels:
+        app: webapp
+
+    spec:
+      containers:
+      - name: app-container
+
+        image: anmar000/fastapi-app:v1  # Replace with your application image
+
+        ports:
+        - containerPort: 8080
+        #command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+
+        volumeMounts:
+        # the volume that called app-code on the node will be mounted on the /app of the container
+        - name: app-code
+          mountPath: /app  # Path inside the container where the code will be mounted
+        
+        env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_USER
+
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_PASSWORD
+
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_DB
+
+          - name: POSTGRES_HOST
+            valueFrom:
+              secretKeyRef:
+                name: postgres-secret
+                key: POSTGRES_HOST
+                  
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+
+
+
+        resources:  # Resource requests and limits for the container.
+          requests:
+            memory: "64Mi"  # Minimum memory requested for the container.
+            cpu: "100m"  # Minimum CPU requested for the container.
+          limits:
+            memory: "128Mi"  # Maximum memory the container can use.
+            cpu: "200m"  # Maximum CPU the container can use.
+      
+
+
+      volumes:
+      - name: app-code
+        hostPath:
+          path: /kubeapp  # Replace with the actual path to your code
+          type: Directory
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-service
+spec:
+  type: ClusterIP
+  selector:
+    app: webapp
+  ports:
+  - protocol: TCP
+    # the service ip is listing to port 5432, so if i sent http://localhost:5432 this port will
+    # accept it and forward it to the target port of the container
+    port: 8080
+    targetPort: 8080
+
+
+
