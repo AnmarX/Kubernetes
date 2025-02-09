@@ -9,6 +9,9 @@ db_user = os.getenv("POSTGRES_USER")
 db_password = os.getenv("POSTGRES_PASSWORD")
 db_host = os.getenv("POSTGRES_HOST", "db")
 
+pod_name = os.getenv("POD_NAME", "Unknown Pod")
+
+
 # Print values (for testing purposes)
 print(f"DB Name: {db_name}")
 print(f"DB User: {db_user}")
@@ -47,7 +50,6 @@ class Item(BaseModel):
 
 @app.get("/")
 def read_root():
-    pod_name = os.getenv("POD_NAME", "Unknown Pod")
     return {"message": f"Hello from pod: {pod_name}"}
 
 @app.post("/items/")
