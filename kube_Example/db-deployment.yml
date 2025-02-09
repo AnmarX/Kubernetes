@@ -1,7 +1,7 @@
 apiVersion:  apps/v1
 kind: Deployment
 metadata:
-  name: webapplication
+  name: db-application
   labels:
     app: db
     
@@ -65,7 +65,7 @@ spec:
             cpu: "200m"  # Maximum CPU the container can use.
             
         
-
+      volumes:
       - name: postgres-data
         emptyDir: {}
 

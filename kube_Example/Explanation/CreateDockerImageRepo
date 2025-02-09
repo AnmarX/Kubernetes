@@ -1,9 +1,15 @@
+# login
+
 docker login
+
+# build image
 
 docker build -t <image-name>:<tag> .
 
+# tag the image you built with repo
 
 docker tag <image-name>:<tag> <docker-hub-username>/<repository-name>:<tag>
 
+# push the taged image to docker hub
 
 docker push <docker-hub-username>/<repository-name>:<tag>
