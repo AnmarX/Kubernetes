@@ -4,6 +4,7 @@ metadata:
   name: web-application
   labels:
     app: webapp
+    ingress-ready: "true"
     
 spec:
   replicas: 2

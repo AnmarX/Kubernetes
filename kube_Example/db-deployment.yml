@@ -4,6 +4,7 @@ metadata:
   name: db-application
   labels:
     app: db
+    ingress-ready: "true"
     
 spec:
   replicas: 1
