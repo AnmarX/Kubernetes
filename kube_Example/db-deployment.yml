@@ -87,8 +87,10 @@ spec:
     app: db
   ports:
   - protocol: TCP
-    # the service ip is listing to port 5432, so if i sent http://localhost:5432 this port will
+    # the service ip is listing to port 5432, so if i sent http://<DNS>:5432 this port will
     # accept it and forward it to the target port of the container
+
+    # wrong example http://<DNS>:5432, it will get connection refused 404 error
     port: 5432
     targetPort: 5432
 

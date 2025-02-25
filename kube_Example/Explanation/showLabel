@@ -1,0 +1,10 @@
+## **📌 Summary**
+
+| **Command**                                                | **Description**                        |
+| ---------------------------------------------------------- | -------------------------------------- |
+| `kubectl get nodes --show-labels`                          | Show all nodes with their labels       |
+| `kubectl get node <NODE_NAME> --show-labels`               | Show labels for a specific node        |
+| `kubectl get node <NODE_NAME> -o yaml`                     | Get detailed label info in YAML format |
+| `kubectl get nodes -l <LABEL_KEY>=<LABEL_VALUE>`           | List nodes with a specific label       |
+| `kubectl label node <NODE_NAME> <LABEL_KEY>=<LABEL_VALUE>` | Add/update a label on a node           |
+| `kubectl label node <NODE_NAME> <LABEL_KEY>-`              | Remove a label from a node             |
