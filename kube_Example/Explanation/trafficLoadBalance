@@ -1,0 +1,63 @@
+# External User ➜ Azure Load Balancer (Public IP) ➜ Kubernetes Service (LoadBalancer) ➜ Pods (Ingress Controller)
+External User →
+ Azure Load Balancer →
+  NGINX Ingress Controller Service (Type: LoadBalancer) →
+   NGINX Ingress Controller Pod →
+    Kubernetes Ingress Rules →
+     Application Service (Type: ClusterIP) →
+      Pod →
+       Container
+
+
+# NAME                          TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)
+ingress-nginx-controller      LoadBalancer   10.0.10.150     52.175.XX.XX    80:30162/TCP
+
+
+
+---
+
+## Detailed Explanation of Workflow:
+
+1. **External User**
+   - Initiates an HTTP/HTTPS request (e.g., visiting a URL).
+
+2. **Azure Load Balancer (Automatic)**
+   - Automatically provisioned by Azure when a Kubernetes Service of type `LoadBalancer` is created.
+   - Receives requests on a public IP automatically assigned by Azure.
+
+2. **NGINX Ingress Controller Service (`LoadBalancer`)**
+   - Automatically set up when you deploy the Ingress NGINX Controller YAML.
+   - Exposes the NGINX Ingress Controller Pod externally.
+
+3. **NGINX Ingress Controller Pod**
+   - Automatically manages and watches Kubernetes Ingress resources.
+   - Routes incoming traffic based on Ingress resource rules you manually defined.
+
+4. **Kubernetes Ingress Rules (Manual)**
+   - Defined explicitly by you (e.g., `ingress.yml`).
+   - Specifies routing based on hostnames or URL paths to backend services.
+
+5. **Application Service (`ClusterIP`)**
+   - Manually defined service that internally routes traffic within Kubernetes to your application Pods.
+
+6. **Application Pod**
+   - Pod deployed manually using a Deployment YAML (`deployment.yml`).
+
+7. **Application Container**
+   - Receives the request and handles the application logic.
+
+---
+
+## Summary: What's Automatic vs. What's Manual
+
+| Component                                | Automatic / Manual                     | Explanation |
+| ----------------------------------------- |---------------------------            |-----------------------------------------------|
+| Azure Load Balancer and Public IP         | ✅ Automatic by Azure                 | Automatically provisioned by Azure when Service type `LoadBalancer` is created |
+| NGINX Ingress Controller Service          | ✅ Automatic (via ingress YAML)       | Created upon applying ingress-nginx deployment YAML |
+| NGINX Ingress Controller Pod              | ✅ Automatic (via ingress YAML)       | Created and managed by Kubernetes |
+| Kubernetes Ingress Rules                  | 🔧 **Manual**                         | Defined explicitly in ingress.yml |
+| Application ClusterIP Service             | 🔧 **Manual**                         | Defined explicitly to route to application Pods |
+| Application Pod & Container               | 🔧 **Manual**                         | Deployed explicitly via deployment.yml |
+
+---
+

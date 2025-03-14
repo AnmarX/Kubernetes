@@ -2,6 +2,11 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import psycopg
 import os
+import httpx
+import requests
+from fastapi.responses import StreamingResponse
+
+
 
 
 db_name = os.getenv("POSTGRES_DB")
@@ -51,6 +56,52 @@ class Item(BaseModel):
 @app.get("/")
 def read_root():
     return {"message": f"Hello from pod: {pod_name}"}
+
+# NGINX_URL = "http://nginx-service.default.svc.cluster.local"
+NGINX_URL = "http://nginx"
+
+@app.get("/nginx-raw")
+async def fetch_nginx_page():
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(NGINX_URL)
+            response.raise_for_status()  # Raise an error for non-2xx responses
+            return response.text
+        except httpx.HTTPStatusError as http_err:
+            return {"error": "HTTP error occurred", "details": str(http_err)}
+        except httpx.RequestError as req_err:
+            return {"error": "Request error occurred", "details": str(req_err)}
+
+
+
+@app.get("/nginx-html")
+async def fetch_nginx_homepage():
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(NGINX_URL, follow_redirects=True)
+            return StreamingResponse(response.aiter_text(), status_code=response.status_code, headers=response.headers)
+        except httpx.RequestError:
+            return StreamingResponse("<h1>Error: Could not fetch Nginx</h1>", status_code=500, media_type="text/html")
+
+from fastapi.responses import HTMLResponse
+
+@app.get("/nginx-html-2")
+async def fetch_nginx_homepage():
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(NGINX_URL, follow_redirects=True)
+            return HTMLResponse(content=response.text, status_code=response.status_code)
+        except httpx.RequestError:
+            return HTMLResponse(content="<h1>Error: Could not fetch Nginx</h1>", status_code=500)
+
+
+@app.get("/nginx-status")
+async def fetch_nginx_status():
+    try:
+        response = requests.get(NGINX_URL)
+        return {"status": response.status_code}
+    except requests.RequestException:
+        return {"status": "error"}
 
 @app.post("/items/")
 async def create_item(item: Item):

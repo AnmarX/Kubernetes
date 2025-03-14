@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-loadbalance
+  name: nginx-communication
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: nginx-loadbalance
+      app: nginx-communication
   template:
     metadata:
       labels:
-        app: nginx-loadbalance
+        app: nginx-communication
     spec:
       containers:
-      - name: nginx
+      - name: nginx-communication
         image: nginx
         ports:
         - containerPort: 80  # 🔹 Container listens on port 80
@@ -27,18 +27,15 @@ spec:
             memory: "128Mi"  # Maximum memory the container can use.
             cpu: "200m"  # Maximum CPU the container can use.
       
-    
+      
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service-loadbalance
+  name: nginx
 spec:
-  type: LoadBalancer
   selector:
-    app: nginx-loadbalance
+    app: nginx-communication
   ports:
-    - port: 80
-      targetPort: 80
+  - port: 80         # 🔹 Service listens on port 80 inside the cluster

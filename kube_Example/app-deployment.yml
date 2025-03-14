@@ -22,7 +22,8 @@ spec:
       containers:
       - name: app-container
 
-        image: anmar000/fastapi-app:v2  # Replace with your application image
+        image: anmar000/fastapi-app:v6
+        imagePullPolicy: Always 
 
         ports:
         - containerPort: 8080

@@ -1,16 +1,35 @@
-passlib
-pydantic[email]
-python-jose[cryptography]
-psycopg~=3.1
-python-dotenv~=0.21
-python_dateutil == 2.8.2
-fastapi
-python_dateutil >= 2.8.2
-python-dotenv~=0.21
-pydantic~=1.8
-uvicorn~=0.22
-passlib~=1.7
-pydantic[email]
-jinja2
-python-multipart
-requests
+# Core dependencies
+fastapi~=0.99.0  # ✅ Compatible with Python 3.13.2
+
+# ASGI Server
+uvicorn~=0.22.0  # ✅ Compatible with Python 3.13.2
+
+# Environment Variables & Utilities
+python-dotenv~=1.0.1  # ✅ Load .env files
+python-dateutil~=2.8.2  # ✅ Date/time utilities
+
+# Web and HTTP requests
+requests~=2.31.0  # ✅ Standard HTTP client
+httpx~=0.24.1  # ✅ Last compatible version with Python 3.13.2 & FastAPI 0.99
+
+# Web Framework Utilities
+jinja2~=3.1.3  # ✅ Template rendering
+
+
+# passlib
+# pydantic[email]
+# python-jose[cryptography]
+# psycopg~=3.1
+# python-dotenv~=0.21
+# python_dateutil == 2.8.2
+# fastapi
+# python_dateutil >= 2.8.2
+# python-dotenv~=0.21
+# pydantic~=1.8
+# uvicorn
+# passlib~=1.7
+# pydantic[email]
+# jinja2
+# python-multipart
+# requests
+# httpx
