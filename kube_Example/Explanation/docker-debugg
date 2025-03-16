@@ -1,0 +1,139 @@
+## **✅ Step 1: Check Running Containers**
+
+```sh
+docker ps -a
+```
+
+This shows:
+
+- Running (`Up`)
+- Exited (`Exited <code>`)
+- Restarting (`Restarting`)
+
+If your container **keeps restarting**, check **logs and exit codes**.
+
+---
+
+## **✅ Step 2: View Logs**
+
+```sh
+docker logs <container_id>
+```
+
+or to **follow logs live**:
+
+```sh
+docker logs -f <container_id>
+```
+
+Look for errors like:
+
+- **"Permission denied"** (file system issues)
+- **"Cannot bind to port"** (port conflicts)
+- **"Missing file or directory"** (wrong path inside container)
+
+---
+
+## **✅ Step 3: Inspect Container for Issues**
+
+```sh
+docker inspect <container_id>
+```
+
+This provides:
+
+- **Environment variables**
+- **Network settings**
+- **Mounts & volumes**
+
+If the **network is an issue**, check:
+
+```sh
+docker inspect <container_id> | grep IPAddress
+```
+
+---
+
+## **✅ Step 4: Check Why a Container Stopped**
+
+```sh
+docker ps -a --filter "name=<container_name>"
+```
+
+If it shows **Exited (1)** or another number, find out why:
+
+```sh
+docker inspect <container_id> --format='{{.State.ExitCode}}'
+```
+
+Then check Docker’s official **exit code reference**.
+
+---
+
+## **✅ Step 5: Get a Shell Inside the Container**
+
+If the container is running:
+
+```sh
+docker exec -it <container_id> /bin/sh
+```
+
+or, if it has Bash:
+
+```sh
+docker exec -it <container_id> /bin/bash
+```
+
+Now, you can:
+
+- **Check logs manually** (`cat /var/log/...`)
+- **Test connectivity** (`ping google.com`)
+- **Inspect the file system** (`ls -l`)
+
+---
+
+## **✅ Step 6: Start a New Debug Session**
+
+If the container **keeps failing**, start an interactive session:
+
+```sh
+docker run --rm -it <image_name> /bin/sh
+```
+
+This allows you to manually run commands before it crashes.
+
+---
+
+## **✅ Step 7: Check Docker Network Issues**
+
+If networking is the problem, check:
+
+```sh
+docker network ls
+```
+
+Find the network and inspect it:
+
+```sh
+docker network inspect <network_name>
+```
+
+To test network from inside a running container:
+
+```sh
+docker exec -it <container_id> ping google.com
+```
+
+---
+
+## **🔥 Summary:**
+
+| Issue                       | Solution                                                       |
+| --------------------------- | -------------------------------------------------------------- |
+| Container won’t start       | `docker logs <container_id>`                                   |
+| Container exits immediately | `docker inspect <container_id> --format='{{.State.ExitCode}}'` |
+| Need a shell inside         | `docker exec -it <container_id> /bin/sh`                       |
+| Network issue               | `docker network inspect <network_name>`                        |
+| Debug before running        | `docker run --rm -it <image> /bin/sh`                          |
+
+🚀 **Try these steps and let me know what error you get!**

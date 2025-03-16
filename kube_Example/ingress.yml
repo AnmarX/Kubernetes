@@ -9,7 +9,7 @@ metadata:
     # nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
 spec:
   rules:
-  - host: localhost
+  - host: loadbalance-demo.com
     http:
       paths:
       - path: /
