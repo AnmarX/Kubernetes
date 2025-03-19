@@ -22,7 +22,7 @@ spec:
       containers:
       - name: app-container
 
-        image: anmar000/fastapi-app:v6
+        image: anmar000/fastapi-app:v7
         imagePullPolicy: Always 
 
         ports:
