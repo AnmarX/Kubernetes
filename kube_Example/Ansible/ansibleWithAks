@@ -1,0 +1,110 @@
+### **Yes, if you want persistent access to the nodes, you need to create separate VMs and add them to AKS manually.**  
+By default, **AKS manages worker nodes dynamically**, meaning:
+- You **cannot directly SSH** into AKS-managed nodes.
+- Azure **automatically scales, replaces, and upgrades nodes**, making manual changes **temporary**.
+- If a node is **deleted or replaced**, your changes will be **lost**.
+
+---
+
+## **✅ How to Create Persistent Nodes in AKS**
+If you want **full control over your worker nodes** (e.g., to install Docker, Ansible, Terraform), you must:
+1. **Create your own VMs** (persistent, manually managed)
+2. **Add them to the AKS cluster manually** as worker nodes
+
+---
+
+## **🚀 Option 1: Use User Node Pools (Best Practice)**
+Instead of adding custom VMs manually, **Azure allows you to create "User Node Pools"** where you can:
+- **SSH into the nodes anytime**
+- **Use custom VM images with pre-installed software**
+- **Scale separately from system nodes**
+
+### **Step 1: Create a User Node Pool with Custom VM Access**
+```sh
+az aks nodepool add \
+  --resource-group MyResourceGroup \
+  --cluster-name MyAKSCluster \
+  --name custompool \
+  --node-count 2 \
+  --vm-set-type VirtualMachineScaleSets \
+  --os-type Linux \
+  --node-vm-size Standard_D2s_v3 \
+  --enable-node-public-ip
+```
+🔹 **Now, these VMs are persistent, and you can SSH into them.**  
+
+---
+
+### **Step 2: Get the Public IPs of Your Custom Nodes**
+```sh
+az vmss list-instance-public-ips \
+  --name aks-custompool-XXXXX \
+  --resource-group MyResourceGroup \
+  --output table
+```
+Example output:
+```
+IP Address      VM ID
+52.174.20.50    aks-custompool-123456
+52.174.30.60    aks-custompool-789012
+```
+
+---
+
+### **Step 3: SSH into Your Node**
+```sh
+ssh azureuser@52.174.20.50
+```
+
+Now, you have **full access** to your AKS worker nodes.
+
+---
+
+## **🚀 Option 2: Manually Add VMs to AKS (Advanced)**
+If you **really want to add custom VMs manually**, follow these steps:
+
+### **Step 1: Create a Separate VM**
+```sh
+az vm create --resource-group MyResourceGroup \
+  --name MyCustomVM \
+  --image Ubuntu2204 \
+  --size Standard_D2s_v3 \
+  --admin-username azureuser \
+  --generate-ssh-keys
+```
+
+### **Step 2: Install Kubernetes & Join the Cluster**
+On your VM, run:
+```sh
+sudo apt update && sudo apt install -y kubelet kubeadm kubectl
+```
+
+Find the **join command** from an existing AKS node:
+```sh
+kubectl get nodes -o wide
+```
+
+Then, on your VM, **join the cluster manually**:
+```sh
+sudo kubeadm join <MASTER_NODE_IP>:6443 --token <TOKEN> --discovery-token-ca-cert-hash sha256:<HASH>
+```
+
+This makes your custom VM **a permanent worker node in the AKS cluster**.
+
+---
+
+## **🎯 Best Practice (Which Should You Choose?)**
+| Method | Can SSH Anytime? | Persistent Nodes? | Best For? |
+|--------|----------------|-------------------|-----------|
+| **User Node Pool (Recommended)** | ✅ Yes | ✅ Yes | Full control + Easy scaling |
+| **Manual VM Join (Advanced)** | ✅ Yes | ✅ Yes | Custom OS or advanced configs |
+| **Default AKS Nodes (Not Custom)** | ❌ No | ❌ No | Fully managed by Azure |
+
+---
+
+### **🔥 Summary:**
+- **By default, AKS worker nodes are NOT directly accessible**.
+- **If you want SSH access**, you must use **User Node Pools** (Best practice) or **Manually Add VMs** (Advanced).
+- **AKS dynamically replaces nodes**, so modifying them directly **is not recommended**.
+
+Would you like help automating this setup with Terraform or Ansible? 🚀

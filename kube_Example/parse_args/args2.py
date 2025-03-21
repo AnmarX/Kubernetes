@@ -20,7 +20,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="A simple CLI tool that executes a shell command and streams its output in real time."
     )
-    parser.add_argument("command", help="The shell command to execute (e.g., \"echo 'Hello, World!'\")")
+    parser.add_argument("command", help="The shell command to execute (e.g., \"echo Hello, World!\")")
     args = parser.parse_args()
 
     run_command(args.command)
