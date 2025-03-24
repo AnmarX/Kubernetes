@@ -21,7 +21,10 @@ def main():
     parser = argparse.ArgumentParser(
         description="A simple CLI tool that executes a shell command and captures its output."
     )
-    parser.add_argument("command", help="The shell command to execute (e.g., \"echo 'Hello, World!'\")")
+    #If you want to pass the command without quotes,
+    # then modify the code to accept all remaining arguments as one command 
+    # nargs=argparse.REMAINDER
+    parser.add_argument("command",nargs=argparse.REMAINDER ,help="The shell command to execute (e.g., \"echo 'Hello, World!'\")")
     args = parser.parse_args()
 
     output = run_shell_command(args.command)
