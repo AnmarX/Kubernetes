@@ -5,8 +5,7 @@ metadata:
   namespace: default
 spec:
   addresses:
-  # - 192.168.97.100-192.168.97.110
-  - 172.19.10.100-172.19.10.110
+  - 192.168.97.100-192.168.97.110
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
