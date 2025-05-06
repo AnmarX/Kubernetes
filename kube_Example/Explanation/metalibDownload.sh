@@ -11,6 +11,7 @@ curl -sL https://raw.githubusercontent.com/metallb/metallb/v0.14.9/config/manife
 # using kind download ingress nginx 
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.12.1/deploy/static/provider/kind/deploy.yaml
 
+https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/static/provider/kind/deploy.yaml
 
 kubectl apply -f addresspool.yml
 
@@ -25,3 +26,4 @@ kubectl patch svc ingress-nginx-controller -n ingress-nginx -p '{"spec": {"type"
 kubectl edit deployment ingress-nginx-controller -n ingress-nginx
 
 
+kubectl label node <your-node-name> ingress-ready=true --overwrite

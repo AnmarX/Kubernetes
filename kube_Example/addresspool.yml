@@ -5,7 +5,8 @@ metadata:
   namespace: default
 spec:
   addresses:
-  - 192.168.97.100-192.168.97.110
+  # 192.168.97.0/24
+  - 192.168.97.50-192.168.97.60
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
@@ -15,3 +16,22 @@ metadata:
 spec:
   ipAddressPools:
   - first-pool
+
+
+# apiVersion: metallb.io/v1beta1
+# kind: IPAddressPool
+# metadata:
+#   namespace: metallb-system
+#   name: first-pool
+# spec:
+#   addresses:
+#     - 192.168.97.50-192.168.97.60
+# ---
+# apiVersion: metallb.io/v1beta1
+# kind: L2Advertisement
+# metadata:
+#   namespace: metallb-system
+#   name: example
+# spec:
+#   ipAddressPools:
+#     - first-pool
