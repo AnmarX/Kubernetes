@@ -1,31 +1,31 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-dep
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80  # 🔹 Container listens on port 80
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nginx-dep
+# spec:
+#   replicas: 2
+#   selector:
+#     matchLabels:
+#       app: nginx
+#   template:
+#     metadata:
+#       labels:
+#         app: nginx
+#     spec:
+#       containers:
+#       - name: nginx
+#         image: nginx
+#         ports:
+#         - containerPort: 80  # 🔹 Container listens on port 80
 
         
-        resources:  # Resource requests and limits for the container.
-          requests:
-            memory: "64Mi"  # Minimum memory requested for the container.
-            cpu: "100m"  # Minimum CPU requested for the container.
-          limits:
-            memory: "128Mi"  # Maximum memory the container can use.
-            cpu: "200m"  # Maximum CPU the container can use.
+#         resources:  # Resource requests and limits for the container.
+#           requests:
+#             memory: "64Mi"  # Minimum memory requested for the container.
+#             cpu: "100m"  # Minimum CPU requested for the container.
+#           limits:
+#             memory: "128Mi"  # Maximum memory the container can use.
+#             cpu: "200m"  # Maximum CPU the container can use.
       
       
 
@@ -33,7 +33,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx-service
+  name: nginx-svc
 spec:
   type: NodePort  # 🔹 Expose externally using NodePort
   selector:
@@ -41,4 +41,4 @@ spec:
   ports:
   - port: 80         # 🔹 Service listens on port 80 inside the cluster
     targetPort: 80   # 🔹 Traffic is forwarded to container port 80
-    nodePort: 30000  # 🔹 External access through NodePort 30000
+    nodePort: 30500  # 🔹 External access through NodePort 30000
