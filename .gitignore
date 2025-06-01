@@ -2,5 +2,5 @@
 /DockerComposeWatchTest/.venv
 .venv
 kube_Example/pg_data
-Kind_Config/kind-config.yml
+./Kind_Config/kind-config.yml
 /Kind_Config
