@@ -1,0 +1,139 @@
+Your Ingress manifest is perfectly fine for HTTP Host-based routing (“my-app.com”), which is why:
+
+```bash
+curl -H "Host: my-app.com" http://192.168.97.50/
+# ✔️ works
+curl http://192.168.97.50/
+# 404 from ingress-nginx default backend
+```
+
+nginx-ingress will only proxy requests whose **Host** header (and path) match one of your `spec.rules`. Everything else falls back to its default 404.
+
+---
+
+## Two ways to make “curl http\://\<LB\_IP>/” work
+
+### 1. Add a **defaultBackend** (catch-all)
+
+This tells nginx-ingress “if no rule matches, send traffic to this Service”:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-app-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  ingressClassName: nginx
+
+  # ⬅️ catch-all if Host/path don't match any rule
+  defaultBackend:
+    service:
+      name: app-service
+      port:
+        number: 8080
+
+  rules:
+    - host: my-app.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app-service
+                port:
+                  number: 8080
+```
+
+With that in place, a bare `curl http://192.168.97.50/` will hit your `defaultBackend`.
+
+---
+
+### 2. Use a DNS/hosts entry so you never hit the IP “naked”
+
+Keep your rule as-is, and on your macOS add:
+
+```bash
+echo "192.168.97.50  my-app.com" | sudo tee -a /etc/hosts
+```
+
+Then simply:
+
+```bash
+curl http://my-app.com/
+```
+
+That way the Host header always matches, and you won’t need `defaultBackend`.
+
+---
+
+**Choose**
+
+* **defaultBackend** → simplest for “IP-only” testing or single-service clusters.
+* **DNS/hosts** → best practice when you want true virtual-host routing (and multiple apps on one IP).
+
+
+
+=====================================================================================================
+Since your `/etc/hosts` already contains:
+
+```
+192.168.97.50  my-app.com
+```
+
+you don’t need the `-H` flag any more—curl will send the right `Host:` header for you. Try:
+
+```bash
+curl -v http://my-app.com/
+```
+
+You should see something like:
+
+```
+> GET / HTTP/1.1
+> Host: my-app.com
+...
+< HTTP/1.1 200 OK
+```
+
+If you still get a 404 or it doesn’t resolve:
+
+1. **Flush your macOS DNS cache** (so the new hosts entry actually takes effect):
+
+   ```bash
+   sudo dscacheutil -flushcache
+   sudo killall -HUP mDNSResponder
+   ```
+
+2. **Verify name resolution**:
+
+   ```bash
+   ping -c 1 my-app.com
+   # should show 192.168.97.50
+   ```
+
+3. **Double-check your Ingress**:
+
+   ```bash
+   kubectl -n <namespace> describe ingress example-app-ingress
+   ```
+
+   * Ensure `ingressClassName: nginx` is present.
+   * Look under **Events** for any warnings about “no ingress class” or “skipping Ingress.”
+
+4. **Inspect the logs** of your nginx-ingress controller for any clues:
+
+   ```bash
+   kubectl -n ingress-nginx logs -l app.kubernetes.io/name=ingress-nginx --tail 50
+   ```
+
+Once DNS is flushed and you can ping `my-app.com` → 192.168.97.50, a plain:
+
+```bash
+curl http://my-app.com/
+```
+
+will hit your Ingress rule and return your app instead of 404.

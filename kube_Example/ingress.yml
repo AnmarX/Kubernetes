@@ -10,7 +10,9 @@ metadata:
 spec:
   rules:
   # - host: loadbalance-demo.com
-  - host: fix.com
+  # if i tried to access the ip it wont work because the access to the app is from the domain
+  # even if the domain is translting to the ip it wont work from the ip directly
+  - host: my-app.com
     http:
       paths:
       - path: /
